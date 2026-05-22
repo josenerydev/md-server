@@ -38,6 +38,7 @@ if (args.includes('--help') || args.includes('-h')) {
   process.exit(0);
 }
 
+const speech = args.includes('--speech');
 const portFlagIndex = args.indexOf('--port');
 const port = portFlagIndex !== -1 ? parseInt(args[portFlagIndex + 1], 10) : undefined;
 
@@ -46,11 +47,13 @@ if (port !== undefined && (isNaN(port) || port < 1 || port > 65535)) {
   process.exit(1);
 }
 
-const folderArg = args.find((a, i) => {
+const pathParts = args.filter((a, i) => {
   if (a.startsWith('--')) return false;
   if (portFlagIndex !== -1 && i === portFlagIndex + 1) return false;
   return true;
 });
+
+const folderArg = pathParts.length > 0 ? pathParts.join(' ') : undefined;
 
 const target = folderArg ? path.resolve(process.cwd(), folderArg) : process.cwd();
 
@@ -66,9 +69,9 @@ if (stat.isFile()) {
     console.error(`Error: File must be a .md file: ${target}`);
     process.exit(1);
   }
-  startServer({ file: target, port });
+  startServer({ file: target, port, speech });
 } else if (stat.isDirectory()) {
-  startServer({ root: target, port });
+  startServer({ root: target, port, speech });
 } else {
   console.error(`Error: Not a file or directory: ${target}`);
   process.exit(1);

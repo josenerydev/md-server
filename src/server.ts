@@ -3,16 +3,18 @@ import http from 'http';
 import path from 'path';
 import fs from 'fs';
 import { scanMarkdownFiles } from './scanner.js';
-import { renderMarkdown } from './renderer.js';
+import { renderMarkdown, renderMarkdownSpeech } from './renderer.js';
 import { renderIndexPage, renderFilePage } from './templates.js';
 
 interface ServerOptions {
   root?: string;
   file?: string;
   port?: number;
+  speech?: boolean;
 }
 
-export function startServer({ root, file, port = 0 }: ServerOptions): void {
+export function startServer({ root, file, port = 0, speech = false }: ServerOptions): void {
+  const render = speech ? renderMarkdownSpeech : renderMarkdown;
   const app = express();
 
   if (file) {
@@ -20,8 +22,8 @@ export function startServer({ root, file, port = 0 }: ServerOptions): void {
     app.get('/', (_req, res) => {
       try {
         const content = fs.readFileSync(absFile, 'utf-8');
-        const html = renderMarkdown(content);
-        res.send(renderFilePage(html, path.basename(absFile), { showBack: false }));
+        const html = render(content);
+        res.send(renderFilePage(html, path.basename(absFile), { showBack: false, speech }));
       } catch {
         res.status(500).send('Error reading file');
       }
@@ -55,8 +57,8 @@ export function startServer({ root, file, port = 0 }: ServerOptions): void {
 
       try {
         const content = fs.readFileSync(absPath, 'utf-8');
-        const html = renderMarkdown(content);
-        res.send(renderFilePage(html, relPath));
+        const html = render(content);
+        res.send(renderFilePage(html, relPath, { speech }));
       } catch {
         res.status(500).send('Error reading file');
       }

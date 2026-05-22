@@ -47,7 +47,7 @@ const CSS_FILE = `
   table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.9375rem; }
   th, td { border: 1px solid #d0d7de; padding: 0.5rem 0.75rem; text-align: left; }
   th { background: #f6f8fa; font-weight: 600; }
-  tr:nth-child(even) td { background: #f6f8fa; }
+  __ZEBRA__
   hr { border: none; border-top: 1px solid #d0d7de; margin: 1.5rem 0; }
   img { max-width: 100%; height: auto; }
   .task-list-item { list-style: none; margin-left: -1.75rem; padding-left: 1.75rem; }
@@ -103,7 +103,7 @@ export function renderIndexPage(files: string[], root: string): string {
 export function renderFilePage(
   htmlContent: string,
   relPath: string,
-  { showBack = true }: { showBack?: boolean } = {}
+  { showBack = true, speech = false }: { showBack?: boolean; speech?: boolean } = {}
 ): string {
   const name = path.basename(relPath, '.md');
   const topBar = showBack
@@ -120,7 +120,7 @@ export function renderFilePage(
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(name)}</title>
-  <style>${CSS_FILE}</style>
+  <style>${CSS_FILE.replace('__ZEBRA__', speech ? '' : 'tr:nth-child(even) td { background: #f6f8fa; }')}${speech ? 'th { background: none; font-weight: normal; }' : ''}</style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 </head>
 <body>

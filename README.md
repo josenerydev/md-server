@@ -57,6 +57,10 @@ md-server ./guidelines/criar-endpoint-fastendpoints.md
 # Porta customizada
 md-server ./guidelines --port 4000
 
+# Modo leitura (speech-friendly para Speechify e leitores TTS)
+md-server ./guidelines --speech
+md-server "arquivo.md" --speech
+
 # Informações
 md-server --help
 md-server --version
@@ -79,6 +83,11 @@ md-server
 - GitHub Flavored Markdown (tabelas, task lists, strikethrough)
 - Syntax highlighting via [highlight.js](https://highlightjs.org/) (requer conexão com a internet)
 - Link de volta ao índice
+
+**Modo `--speech`:** renderização otimizada para leitores TTS como [Speechify](https://speechify.com/):
+- Blocos de código viram `<p>` (lidos pelo TTS, separados por `<hr>`)
+- Tabelas sem zebra e sem destaque no header (lidas sem pular)
+- Blockquotes em `<div>` (não ignorados pelo leitor)
 
 ## Desenvolvimento
 
