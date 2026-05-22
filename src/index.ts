@@ -17,6 +17,7 @@ Arguments:
 
 Options:
   --port <n>    Port to listen on (default: random available port)
+  --speech      TTS-friendly rendering (for Speechify and similar readers)
   --version     Print version number
   --help        Show this help message
 
@@ -24,6 +25,7 @@ Examples:
   md-server
   md-server ./guidelines
   md-server ../docs --port 4000
+  md-server "arquivo.md" --speech
 `.trim();
 
 const args = process.argv.slice(2);
